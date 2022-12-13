@@ -19,7 +19,7 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 
-public class SimpleMemo extends JFrame implements ActionListener,CaretListener{
+public class SimpleMemo extends JFrame implements ActionListener, CaretListener {
 	public static void main(String[] args) {
 		SimpleMemo memo = new SimpleMemo();
 		memo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -33,11 +33,11 @@ public class SimpleMemo extends JFrame implements ActionListener,CaretListener{
 	JToolBar toolBar;
 	JComboBox<Object> comboFonts;
 	JComboBox<Object> comboSizes;
-	
-	String currentFontName="";
-	int currentFontSize=0;
-	boolean flag=false;
-	
+
+	String currentFontName = "";
+	int currentFontSize = 0;
+	boolean flag = false;
+
 	SimpleMemo() {
 		setTitle("しんぷるなめもちょう");
 		setBounds(200, 200, 300, 200);
@@ -57,7 +57,7 @@ public class SimpleMemo extends JFrame implements ActionListener,CaretListener{
 //		DefaultStyledDocument doc = new DefaultStyledDocument(sc);
 		textPane.setDocument(doc);
 //		textPane.setDocument(new DefaultStyledDocument(new StyleContext()));
-		textPane.addCaretListener(this);//きゃれっととはカーソルが今どこにいるか
+		textPane.addCaretListener(this);// きゃれっととはカーソルが今どこにいるか
 		// 初期文書の読み込み
 		initDocument(doc, sc);
 		// スタイルの変更
@@ -89,7 +89,7 @@ public class SimpleMemo extends JFrame implements ActionListener,CaretListener{
 		toolBar.add(comboFonts);
 
 		toolBar.addSeparator();
-		
+
 		comboSizes = new JComboBox<Object>(new String[] { "8", "9", "10", "11", "12", "14", "16", "18", "20", "22",
 				"24", "26", "28", "36", "48", "72" });
 		comboSizes.setMaximumSize(comboSizes.getPreferredSize());
@@ -144,11 +144,11 @@ public class SimpleMemo extends JFrame implements ActionListener,CaretListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO 自動生成されたメソッド・スタブ
-		if(flag) {
-			//キャレット変更に伴うアクションイベントの場合はパスする
+		if (flag) {
+			// キャレット変更に伴うアクションイベントの場合はパスする
 			return;
 		}
-		
+
 		MutableAttributeSet attr = new SimpleAttributeSet();
 		if (e.getSource() == comboFonts) {
 			String fontName = comboFonts.getSelectedItem().toString();
@@ -165,6 +165,21 @@ public class SimpleMemo extends JFrame implements ActionListener,CaretListener{
 	@Override
 	public void caretUpdate(CaretEvent e) {
 		// TODO 自動生成されたメソッド・スタブ
-		
+		flag = true;
+		int p = textPane.getSelectionStart();
+		AttributeSet a = doc.getCharacterElement(p).getAttributes();
+		String name = StyleConstants.getFontFamily(a);
+
+		// 変更前と同じ場合は無視
+		if (!currentFontName.equals(name)) {
+			currentFontName = name;
+			comboFonts.setSelectedItem(name);
+		}
+		int size = StyleConstants.getFontSize(a);
+		if (currentFontSize != size) {
+			currentFontSize = size;
+			comboSizes.setSelectedItem(Integer.toString(size));
+		}
+		flag = false;
 	}
 }
