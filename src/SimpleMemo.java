@@ -2,6 +2,8 @@ import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.event.*;
 import java.awt.event.*;
+
+import java.io.*;
 import java.awt.*;
 
 public class SimpleMemo extends JFrame implements ActionListener, CaretListener {
@@ -9,6 +11,7 @@ public class SimpleMemo extends JFrame implements ActionListener, CaretListener 
 		SimpleMemo memo = new SimpleMemo();
 		memo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		memo.setVisible(true);
+
 	}
 
 	JTextPane textPane;
@@ -24,11 +27,10 @@ public class SimpleMemo extends JFrame implements ActionListener, CaretListener 
 	JToggleButton toggleS;
 	JMenuBar menuBar;
 	JMenu menu;
-	JMenuItem item1;
-	JMenuItem item2;
+	JMenuItem open;
+	JMenuItem save;
 	JFileChooser chooser;
-	
-	
+
 	String currentFontName = "";
 	int currentFontSize = 0;
 	boolean flag = false;
@@ -38,14 +40,15 @@ public class SimpleMemo extends JFrame implements ActionListener, CaretListener 
 		setBounds(200, 200, 500, 400);
 		initToolbar();
 		getContentPane().add(toolBar, BorderLayout.NORTH);
-		menuBar=new JMenuBar();
-		menu=new JMenu("ファイル");
-		item1=new JMenuItem("開く");
-		item2=new JMenuItem("保存");
+		menuBar = new JMenuBar();
+		menu = new JMenu("ファイル");
+		open = new JMenuItem("開く");
+		save = new JMenuItem("保存");
+		chooser = new JFileChooser();
 		setJMenuBar(menuBar);
 		menuBar.add(menu);
-		menu.add(item1);
-		menu.add(item2);
+		menu.add(open);
+		menu.add(save);
 		textPane = new JTextPane();// テキストエリア的なやつ
 		JScrollPane scroll = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED); // テキストエリアをスクロールできるようにするやつ
@@ -60,6 +63,8 @@ public class SimpleMemo extends JFrame implements ActionListener, CaretListener 
 		textPane.setDocument(doc);
 //		textPane.setDocument(new DefaultStyledDocument(new StyleContext()));
 		textPane.addCaretListener(this);// きゃれっととはカーソルが今どこにいるか
+		open.addActionListener(this);
+		save.addActionListener(this);
 		// 初期文書の読み込み
 		initDocument(doc, sc);
 		// スタイルの変更
@@ -76,6 +81,8 @@ public class SimpleMemo extends JFrame implements ActionListener, CaretListener 
 		} catch (Exception e) {
 			System.err.println("初期文書の読み込みに失敗しました");
 		}
+
+		System.out.println(textPane.getText());
 	}
 
 	protected void initToolbar() {
@@ -193,6 +200,53 @@ public class SimpleMemo extends JFrame implements ActionListener, CaretListener 
 			StyleConstants.setUnderline(attr, toggleU.isSelected());
 		} else if (actionCommand.equals("toggleS")) {
 			StyleConstants.setStrikeThrough(attr, toggleS.isSelected());
+		} else if (e.getSource() == open) {
+			chooser.showOpenDialog(null);
+			File file = chooser.getSelectedFile();
+			if (file != null) {
+				if (file.getName().contains(".txt")) {
+					try {
+						BufferedReader in = new BufferedReader(new FileReader(file));
+						String s;
+						while ((s = in.readLine()) != null) {
+							
+							textPane.setText(s);
+						}
+						in.close();
+					} catch (FileNotFoundException e1) {
+						// TODO 自動生成された catch ブロック
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						// TODO 自動生成された catch ブロック
+						e1.printStackTrace();
+					}
+				} else {
+					System.out.println("txtファイルが選択されてないよ");
+				}
+				System.out.println(file.getName() + "が選択されました");
+			}
+		} else if (e.getSource() == save) {
+			int okCancel = chooser.showSaveDialog(this);
+			if (okCancel == 0) {
+				File file = chooser.getSelectedFile();
+				if (file != null) {
+					if (file.getName().contains(".txt")) {
+						try {
+							PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+							out.write(textPane.getText());
+							out.close();
+						} catch (IOException e1) {
+							// TODO 自動生成された catch ブロック
+							e1.printStackTrace();
+						}
+						System.out.println(file.getName() + "が選択されました");
+						chooser.approveSelection();
+					} else {
+						System.out.println("txtファイルを選択してね");
+					}
+				}
+			}
+
 		}
 
 		setAttributeSet(attr);
