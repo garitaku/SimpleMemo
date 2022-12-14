@@ -1,23 +1,8 @@
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.GraphicsEnvironment;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-import javax.swing.JToolBar;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.MutableAttributeSet;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
+import javax.swing.*;
+import javax.swing.text.*;
+import javax.swing.event.*;
+import java.awt.event.*;
+import java.awt.*;
 
 public class SimpleMemo extends JFrame implements ActionListener, CaretListener {
 	public static void main(String[] args) {
@@ -31,8 +16,12 @@ public class SimpleMemo extends JFrame implements ActionListener, CaretListener 
 	StyleContext sc;
 
 	JToolBar toolBar;
-	JComboBox<Object> comboFonts;
-	JComboBox<Object> comboSizes;
+	JComboBox<Object> comboFonts;// Font選択
+	JComboBox<Object> comboSizes;// Fontサイズ選択
+	JToggleButton toggleB;
+	JToggleButton toggleI;
+	JToggleButton toggleU;
+	JToggleButton toggleS;
 
 	String currentFontName = "";
 	int currentFontSize = 0;
@@ -40,7 +29,7 @@ public class SimpleMemo extends JFrame implements ActionListener, CaretListener 
 
 	SimpleMemo() {
 		setTitle("しんぷるなめもちょう");
-		setBounds(200, 200, 300, 200);
+		setBounds(200, 200, 500, 400);
 		initToolbar();
 		getContentPane().add(toolBar, BorderLayout.NORTH);
 
@@ -67,7 +56,7 @@ public class SimpleMemo extends JFrame implements ActionListener, CaretListener 
 	protected void initDocument(DefaultStyledDocument doc, StyleContext sc) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("スタイル付きのテキストサンプルです。\n");
-		sb.append("スタイルを変えて表示しています。");
+		sb.append("スタイルを変えて表示しています。\n");
 
 		try {
 			doc.insertString(0, new String(sb), sc.getStyle(StyleContext.DEFAULT_STYLE));
@@ -92,10 +81,31 @@ public class SimpleMemo extends JFrame implements ActionListener, CaretListener 
 
 		comboSizes = new JComboBox<Object>(new String[] { "8", "9", "10", "11", "12", "14", "16", "18", "20", "22",
 				"24", "26", "28", "36", "48", "72" });
+		toolBar.add(comboSizes);
 		comboSizes.setMaximumSize(comboSizes.getPreferredSize());
 		comboSizes.addActionListener(this);
-//		comboSizes.setActionCommand("comboSizes");
 		toolBar.add(comboSizes);
+
+		toolBar.addSeparator();
+
+		toggleB = new JToggleButton("<html><b>B</b></html>");// トグルボタンを作成
+		toolBar.add(toggleB);// ツールバーにボタンを追加
+		toggleB.setPreferredSize(new Dimension(26, 26));
+		toggleB.addActionListener(this);
+
+		toolBar.addSeparator();
+
+		toggleI = new JToggleButton("<html><i>I</i></html>");// トグルボタンを作成
+		toggleI.setPreferredSize(new Dimension(26, 26));
+		toggleI.addActionListener(this);
+		toolBar.add(toggleI);// ツールバーにボタンを追加
+		
+	    /* アンダーライン 選択用トグルボタン */
+	    toggleU = new JToggleButton("<html><u>U</u></html>");
+	    toolBar.add(toggleU);
+	    toggleU.addActionListener(this);
+	    toggleU.setActionCommand("toggleU");
+	    toggleU.setPreferredSize(new Dimension(26, 26));
 	}
 
 	protected void setAttributeSet(AttributeSet attr) {
@@ -105,41 +115,41 @@ public class SimpleMemo extends JFrame implements ActionListener, CaretListener 
 		doc.setCharacterAttributes(start, end - start, attr, false);
 	}
 
-	protected void changeStyle(DefaultStyledDocument doc) {
-		// 4文字目から8文字太字にする
-		MutableAttributeSet attr = new SimpleAttributeSet();
-		StyleConstants.setBold(attr, true);
-		doc.setCharacterAttributes(4, 8, attr, false);
-
-		// 6文字目から4文字分斜体にする
-		MutableAttributeSet attr2 = new SimpleAttributeSet();
-		StyleConstants.setItalic(attr2, true);
-		doc.setCharacterAttributes(6, 4, attr2, false);
-
-		// 2文字目から4文字分色変更、文字色赤、背景黒
-		MutableAttributeSet attr3 = new SimpleAttributeSet();
-		StyleConstants.setForeground(attr3, Color.red);
-		StyleConstants.setBackground(attr3, Color.black);
-		doc.setCharacterAttributes(2, 4, attr3, false);
-		doc.setCharacterAttributes(2, 4, attr3, false);
-
-		// 20文字目から6文字分行書体にしてフォントを大きく
-		MutableAttributeSet attr4 = new SimpleAttributeSet();
-		StyleConstants.setFontFamily(attr4, "HGP行書体");
-		StyleConstants.setFontSize(attr4, 24);
-		doc.setCharacterAttributes(20, 6, attr4, false);
-
-		// 8文字目から5文字分下線を引く
-		MutableAttributeSet attr5 = new SimpleAttributeSet();
-		StyleConstants.setUnderline(attr5, true);
-		doc.setCharacterAttributes(8, 5, attr5, false);
-
-		// 27文字目から5文字分取り消し線を引く
-		MutableAttributeSet attr6 = new SimpleAttributeSet();
-		StyleConstants.setStrikeThrough(attr6, true);
-		doc.setCharacterAttributes(27, 5, attr6, false);
-
-	}
+//	protected void changeStyle(DefaultStyledDocument doc) {
+//		// 4文字目から8文字太字にする
+//		MutableAttributeSet attr = new SimpleAttributeSet();
+//		StyleConstants.setBold(attr, true);
+//		doc.setCharacterAttributes(4, 8, attr, false);
+//
+//		// 6文字目から4文字分斜体にする
+//		MutableAttributeSet attr2 = new SimpleAttributeSet();
+//		StyleConstants.setItalic(attr2, true);
+//		doc.setCharacterAttributes(6, 4, attr2, false);
+//
+//		// 2文字目から4文字分色変更、文字色赤、背景黒
+//		MutableAttributeSet attr3 = new SimpleAttributeSet();
+//		StyleConstants.setForeground(attr3, Color.red);
+//		StyleConstants.setBackground(attr3, Color.black);
+//		doc.setCharacterAttributes(2, 4, attr3, false);
+//		doc.setCharacterAttributes(2, 4, attr3, false);
+//
+//		// 20文字目から6文字分行書体にしてフォントを大きく
+//		MutableAttributeSet attr4 = new SimpleAttributeSet();
+//		StyleConstants.setFontFamily(attr4, "HGP行書体");
+//		StyleConstants.setFontSize(attr4, 24);
+//		doc.setCharacterAttributes(20, 6, attr4, false);
+//
+//		// 8文字目から5文字分下線を引く
+//		MutableAttributeSet attr5 = new SimpleAttributeSet();
+//		StyleConstants.setUnderline(attr5, true);
+//		doc.setCharacterAttributes(8, 5, attr5, false);
+//
+//		// 27文字目から5文字分取り消し線を引く
+//		MutableAttributeSet attr6 = new SimpleAttributeSet();
+//		StyleConstants.setStrikeThrough(attr6, true);
+//		doc.setCharacterAttributes(27, 5, attr6, false);
+//
+//	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -148,7 +158,7 @@ public class SimpleMemo extends JFrame implements ActionListener, CaretListener 
 			// キャレット変更に伴うアクションイベントの場合はパスする
 			return;
 		}
-
+		String actionCommand = e.getActionCommand();
 		MutableAttributeSet attr = new SimpleAttributeSet();
 		if (e.getSource() == comboFonts) {
 			String fontName = comboFonts.getSelectedItem().toString();
@@ -156,7 +166,14 @@ public class SimpleMemo extends JFrame implements ActionListener, CaretListener 
 		} else if (e.getSource() == comboSizes) {
 			int fontSize = Integer.parseInt(comboSizes.getSelectedItem().toString());
 			StyleConstants.setFontSize(attr, fontSize);
-		}
+		} else if (toggleB.isSelected()) {
+			StyleConstants.setBold(attr, toggleB.isSelected());
+		} else if (toggleI.isSelected()) {
+			StyleConstants.setItalic(attr, toggleI.isSelected());
+		}else if (actionCommand.equals("toggleU")){
+		      /* アンダーライン */
+		      StyleConstants.setUnderline(attr, toggleU.isSelected());
+		    }
 
 		setAttributeSet(attr);
 		textPane.requestFocusInWindow();
