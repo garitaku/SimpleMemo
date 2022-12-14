@@ -206,11 +206,11 @@ public class SimpleMemo extends JFrame implements ActionListener, CaretListener 
 			if (file != null) {
 				if (file.getName().contains(".txt")) {
 					try {
+						textPane.setText(null);
 						BufferedReader in = new BufferedReader(new FileReader(file));
 						String s;
 						while ((s = in.readLine()) != null) {
-							
-							textPane.setText(s);
+							textPane.setText(textPane.getText() + s + "\r");
 						}
 						in.close();
 					} catch (FileNotFoundException e1) {
