@@ -35,7 +35,7 @@ public class SimpleMemo extends JFrame implements ActionListener, CaretListener 
 
 		textPane = new JTextPane();// テキストエリア的なやつ
 		JScrollPane scroll = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);// テキストエリアをスクロールできるようにするやつ
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED); // テキストエリアをスクロールできるようにするやつ
 		getContentPane().add(scroll, BorderLayout.CENTER);
 		sc = new StyleContext();
 		doc = new DefaultStyledDocument(sc);
@@ -94,20 +94,23 @@ public class SimpleMemo extends JFrame implements ActionListener, CaretListener 
 		toggleB.addActionListener(this);
 		toggleB.setActionCommand("toggleB");
 
-		toolBar.addSeparator();
-
 		toggleI = new JToggleButton("<html><i>I</i></html>");// トグルボタンを作成
 		toggleI.setPreferredSize(new Dimension(26, 26));
 		toggleI.addActionListener(this);
 		toggleI.setActionCommand("toggleI");
 		toolBar.add(toggleI);// ツールバーにボタンを追加
 
-		/* アンダーライン 選択用トグルボタン */
 		toggleU = new JToggleButton("<html><u>U</u></html>");
 		toolBar.add(toggleU);
 		toggleU.addActionListener(this);
 		toggleU.setActionCommand("toggleU");
 		toggleU.setPreferredSize(new Dimension(26, 26));
+
+		toggleS = new JToggleButton("<html><s>S</s></html>");
+		toolBar.add(toggleS);
+		toggleS.addActionListener(this);
+		toggleS.setActionCommand("toggleS");
+		toggleS.setPreferredSize(new Dimension(26, 26));
 	}
 
 	protected void setAttributeSet(AttributeSet attr) {
@@ -175,6 +178,8 @@ public class SimpleMemo extends JFrame implements ActionListener, CaretListener 
 		} else if (actionCommand.equals("toggleU")) {
 			/* アンダーライン */
 			StyleConstants.setUnderline(attr, toggleU.isSelected());
+		} else if (actionCommand.equals("toggleS")) {
+			StyleConstants.setStrikeThrough(attr, toggleS.isSelected());
 		}
 
 		setAttributeSet(attr);
