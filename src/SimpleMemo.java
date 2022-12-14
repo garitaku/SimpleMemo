@@ -22,7 +22,13 @@ public class SimpleMemo extends JFrame implements ActionListener, CaretListener 
 	JToggleButton toggleI;
 	JToggleButton toggleU;
 	JToggleButton toggleS;
-
+	JMenuBar menuBar;
+	JMenu menu;
+	JMenuItem item1;
+	JMenuItem item2;
+	JFileChooser chooser;
+	
+	
 	String currentFontName = "";
 	int currentFontSize = 0;
 	boolean flag = false;
@@ -32,7 +38,14 @@ public class SimpleMemo extends JFrame implements ActionListener, CaretListener 
 		setBounds(200, 200, 500, 400);
 		initToolbar();
 		getContentPane().add(toolBar, BorderLayout.NORTH);
-
+		menuBar=new JMenuBar();
+		menu=new JMenu("ファイル");
+		item1=new JMenuItem("開く");
+		item2=new JMenuItem("保存");
+		setJMenuBar(menuBar);
+		menuBar.add(menu);
+		menu.add(item1);
+		menu.add(item2);
 		textPane = new JTextPane();// テキストエリア的なやつ
 		JScrollPane scroll = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED); // テキストエリアをスクロールできるようにするやつ
