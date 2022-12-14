@@ -92,20 +92,22 @@ public class SimpleMemo extends JFrame implements ActionListener, CaretListener 
 		toolBar.add(toggleB);// ツールバーにボタンを追加
 		toggleB.setPreferredSize(new Dimension(26, 26));
 		toggleB.addActionListener(this);
+		toggleB.setActionCommand("toggleB");
 
 		toolBar.addSeparator();
 
 		toggleI = new JToggleButton("<html><i>I</i></html>");// トグルボタンを作成
 		toggleI.setPreferredSize(new Dimension(26, 26));
 		toggleI.addActionListener(this);
+		toggleI.setActionCommand("toggleI");
 		toolBar.add(toggleI);// ツールバーにボタンを追加
-		
-	    /* アンダーライン 選択用トグルボタン */
-	    toggleU = new JToggleButton("<html><u>U</u></html>");
-	    toolBar.add(toggleU);
-	    toggleU.addActionListener(this);
-	    toggleU.setActionCommand("toggleU");
-	    toggleU.setPreferredSize(new Dimension(26, 26));
+
+		/* アンダーライン 選択用トグルボタン */
+		toggleU = new JToggleButton("<html><u>U</u></html>");
+		toolBar.add(toggleU);
+		toggleU.addActionListener(this);
+		toggleU.setActionCommand("toggleU");
+		toggleU.setPreferredSize(new Dimension(26, 26));
 	}
 
 	protected void setAttributeSet(AttributeSet attr) {
@@ -166,14 +168,14 @@ public class SimpleMemo extends JFrame implements ActionListener, CaretListener 
 		} else if (e.getSource() == comboSizes) {
 			int fontSize = Integer.parseInt(comboSizes.getSelectedItem().toString());
 			StyleConstants.setFontSize(attr, fontSize);
-		} else if (toggleB.isSelected()) {
+		} else if (actionCommand.equals("toggleB")) {
 			StyleConstants.setBold(attr, toggleB.isSelected());
-		} else if (toggleI.isSelected()) {
+		} else if (actionCommand.equals("toggleI")) {
 			StyleConstants.setItalic(attr, toggleI.isSelected());
-		}else if (actionCommand.equals("toggleU")){
-		      /* アンダーライン */
-		      StyleConstants.setUnderline(attr, toggleU.isSelected());
-		    }
+		} else if (actionCommand.equals("toggleU")) {
+			/* アンダーライン */
+			StyleConstants.setUnderline(attr, toggleU.isSelected());
+		}
 
 		setAttributeSet(attr);
 		textPane.requestFocusInWindow();
